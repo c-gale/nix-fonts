@@ -3,22 +3,14 @@
     "A flake giving access to fonts that I use, outside of nixpkgs.";
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs }:
       let 
         system = "x86_64-linux";
         pkgs = import nixpkgs {
           inherit system;
         };
       in {
-        defaultPackage.${system} = self.packages.${system}.departure-mono;
-
-        devShells.${system}.default = pkgs.mkShell {
-          packages = [ self.packages.${system}.departure-mono ];
-        };
-
         packages.${system}.departure-mono = pkgs.stdenv.mkDerivation {
           name = "departure-mono";
           dontConfigure = true;
@@ -35,5 +27,11 @@
           '';
           meta = { description = "Departure Mono Nerd Font"; };
         };
-      });
+
+                      defaultPackage.${system} = self.packages.${system}.departure-mono;
+
+        devShells.${system}.default = pkgs.mkShell {
+          packages = [ self.packages.${system}.departure-mono ];
+        };
+      };
 }
