@@ -2,17 +2,18 @@
   description =
     "A flake giving access to fonts that I use, outside of nixpkgs.";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
 
   outputs = { self, nixpkgs }:
       let 
         system = "x86_64-linux";
-        pkgs = import nixpkgs {
-          inherit system;
-        };
+        pkgs = import nixpkgs { inherit system; };
       in {
         packages.${system}.departure-mono = pkgs.stdenv.mkDerivation {
           pname = "departure-mono";
+          version = "3.4.0";
 
           src = pkgs.fetchzip {
             url = 
@@ -27,7 +28,7 @@
           '';
         };
 
-                      defaultPackage.${system} = self.packages.${system}.departure-mono;
+        defaultPackage.${system} = self.packages.${system}.departure-mono;
 
         devShells.${system}.default = pkgs.mkShell {
           packages = [ self.packages.${system}.departure-mono ];
