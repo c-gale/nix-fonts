@@ -12,8 +12,8 @@
         };
       in {
         packages.${system}.departure-mono = pkgs.stdenv.mkDerivation {
-          name = "departure-mono";
-          dontConfigure = true;
+          pname = "departure-mono";
+
           src = pkgs.fetchzip {
             url = 
               "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/DepartureMono.zip";
@@ -25,7 +25,6 @@
             mkdir -p $out/share/fonts
             cp -R $src $out/share/fonts/opentype
           '';
-          meta = { description = "Departure Mono Nerd Font"; };
         };
 
                       defaultPackage.${system} = self.packages.${system}.departure-mono;
