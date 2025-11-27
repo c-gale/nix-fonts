@@ -7,15 +7,19 @@
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
+      let pkgs 
+        system = "x86_64-linux";
+        pkgs = import nixpkgs {
+          inherit system;
+        };
       in {
-        defaultPackage = pkgs.symlinkJoin {
-          name = "myfonts-0.0.1";
-          paths = builtins.attrValues
-            self.packages.${system}; # Add font derivation names here
+        defaultPackage.${system} = self.packages.${system}.departure-mono;
+
+        devShells.${system}.default = pkgs.mkShell {
+          packages = [ self.packages.${system}.departure-mono ];
         };
 
-        packages.departure-mono = pkgs.symlinkJoin {
+        packages.${system}.departure-mono = pkgs.stdenv.mkDerivation {
           name = "departure-mono";
           dontConfigure = true;
           src = pkgs.fetchzip {
